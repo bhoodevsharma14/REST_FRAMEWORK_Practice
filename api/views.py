@@ -1,3 +1,4 @@
+from functools import partial
 from django.shortcuts import render
 import requests
 from rest_framework import serializers
@@ -73,4 +74,21 @@ def student_api(request):
             return HttpResponse(json_data,content_type='application//json')
         json_data = JSONRenderer().render(serializer.errors)
         return HttpResponse(json_data,content_type='application/json')
-            
+    
+    if request.method == 'PUT':
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        python_data = JSONParser().parse(stream)
+        id = python_data.get('id')
+        stu = Student.objects.get(id=id)
+        serializer = StudentSerializer(stu,data=python_data,partial=True)  #if we want all the data should be updated than than partial property will not be there
+
+        #For UPDATING ALL THE FIELDS
+        # serializer = StudentSerializer(stu,data=python_data) 
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg':'Data Updated!!'}
+            json_data = JSONRenderer().render(res)
+        else:
+            json_data = JSONRenderer.render(serializer.errors)
+        return HttpResponse(json_data,content_type='application/json')
