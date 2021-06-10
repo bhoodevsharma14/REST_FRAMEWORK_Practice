@@ -10,46 +10,14 @@ from django.http import HttpResponse,JsonResponse
 import io
 from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
-#Model Object - Single Student Data
 
-def student_detail(request,pk):
-    stu = Student.objects.get(id=pk)         #Calling Data from Student Model
-    serializer = StudentSerializer(stu)     #Converting to Serialied data
-    # these two lines to single line
-    # json_data = JSONRenderer().render(serializer.data)  #Converting serialized data into JSON data
-    # return HttpResponse(json_data,content_type='application/json')
-    return JsonResponse(serializer.data)
+from django.utils.decorators import method_decorator
+from django.views import View
 
-
-#All Student Data    
-def student_list(request):
-    stu = Student.objects.all()         #Calling Data from Student Model
-    serializer = StudentSerializer(stu,many=True)     #Converting to Serialied data
-    # These two lines to single line
-    # json_data = JSONRenderer().render(serializer.data)  #Converting serialized data into JSON data
-    # return HttpResponse(json_data,content_type='application/json')
-    return JsonResponse(serializer.data,safe=False) #for multiple data safe= False defaut safe=True
-
-#To Create Student
-@csrf_exempt
-def student_create(request):
-    if request.method == 'POST':
-        json_data = request.body
-        stream = io.BytesIO(json_data)
-        python_data = JSONParser().parse(stream)
-        serializer =StudentSerializer(data=python_data)
-        if serializer.is_valid():
-            serializer.save()
-            res = {'msg':'Data Created'}
-            json_data = JSONRenderer().render(res)
-            return HttpResponse(json_data,content_type='application//json')
-        json_data = JSONRenderer().render(serializer.errors)
-        return HttpResponse(json_data,content_type='application/json')
-
-#CRUD OPERATIONS
-@csrf_exempt
-def student_api(request):
-    if request.method == 'GET':
+#View Class 
+@method_decorator(csrf_exempt,name='dispatch')
+class StudentAPI(View):
+    def get(self,request,*args,**kwargs):
         json_data = request.body
         stream = io.BytesIO(json_data)
         python_data = JSONParser().parse(stream)
@@ -60,10 +28,11 @@ def student_api(request):
         else:
             stu = Student.objects.all()
             serializer = StudentSerializer(stu,many=True)
-        json_data = JSONRenderer().render(serializer.data)
-        return HttpResponse(json_data,content_type='application/json')
+        # json_data = JSONRenderer().render(serializer.data)
+        # return HttpResponse(json_data,content_type='application/json')
+        return JsonResponse(serializer.data,safe=False)
     
-    if request.method == 'POST':
+    def post(self,request,*args,**kwargs):
         json_data = request.body
         stream = io.BytesIO(json_data)
         python_data = JSONParser().parse(stream)
@@ -71,12 +40,14 @@ def student_api(request):
         if serializer.is_valid():
             serializer.save()
             res = {'msg':'Data Saved Successfully'}
-            json_data = JSONRenderer().render(res)
-            return HttpResponse(json_data,content_type='application//json')
-        json_data = JSONRenderer().render(serializer.errors)
-        return HttpResponse(json_data,content_type='application/json')
-    
-    if request.method == 'PUT':
+            return JsonResponse(res,safe=False)
+            # json_data = JSONRenderer().render(res)
+            # return HttpResponse(json_data,content_type='application//json')
+        # json_data = JSONRenderer().render(serializer.errors)
+        # return HttpResponse(json_data,content_type='application/json')
+        return JsonResponse(serializer.errors,safe=False)
+
+    def put(self,request,*args,**kwargs):
         json_data = request.body
         stream = io.BytesIO(json_data)
         python_data = JSONParser().parse(stream)
@@ -89,12 +60,14 @@ def student_api(request):
         if serializer.is_valid():
             serializer.save()
             res = {'msg':'Data Updated!!'}
-            json_data = JSONRenderer().render(res)
-        else:
-            json_data = JSONRenderer.render(serializer.errors)
-        return HttpResponse(json_data,content_type='application/json')
+            return JsonResponse(res,safe=False)
+        #     json_data = JSONRenderer().render(res)
+        # else:
+        #     json_data = JSONRenderer.render(serializer.errors)
+        # return HttpResponse(json_data,content_type='application/json')
+        return JsonResponse(serializer.errors,safe=False)
 
-    if request.method == 'DELETE':
+    def delete(self,request,*args,**kwargs):
         json_data = request.body
         stream = io.BytesIO(json_data)
         python_data = JSONParser().parse(stream)
@@ -102,5 +75,6 @@ def student_api(request):
         stu = Student.objects.get(id=id)
         stu.delete()
         res = {'msg':'Data Deleted !!'}
-        json_data = JSONRenderer().render(res)
-        return HttpResponse(json_data,content_type='application/json')
+        # json_data = JSONRenderer().render(res)
+        # return HttpResponse(json_data,content_type='application/json')
+        return JsonResponse(res,safe=False)
