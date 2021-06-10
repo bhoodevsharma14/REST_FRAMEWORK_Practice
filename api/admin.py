@@ -4,4 +4,5 @@ from .models import Student
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
+    ordering = ['id']
     list_display = ['id','name','roll','city']
