@@ -1,4 +1,5 @@
 from functools import partial
+import json
 from django.shortcuts import render
 import requests
 from rest_framework import serializers
@@ -91,4 +92,15 @@ def student_api(request):
             json_data = JSONRenderer().render(res)
         else:
             json_data = JSONRenderer.render(serializer.errors)
+        return HttpResponse(json_data,content_type='application/json')
+
+    if request.method == 'DELETE':
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        python_data = JSONParser().parse(stream)
+        id = python_data.get('id')
+        stu = Student.objects.get(id=id)
+        stu.delete()
+        res = {'msg':'Data Deleted !!'}
+        json_data = JSONRenderer().render(res)
         return HttpResponse(json_data,content_type='application/json')
