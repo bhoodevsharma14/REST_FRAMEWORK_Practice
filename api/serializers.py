@@ -1,8 +1,16 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from .models import Student
 
+#Validators
+def starts_with_r(value):
+    if value[0].lower() != 'r':
+        raise serializers.ValidationError('Name Should Starts with R')
+
+
+
 class StudentSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100)
+    name = serializers.CharField(max_length=100,validators=[starts_with_r]) #we can pass multiple validation methos in Validators
     roll = serializers.IntegerField()
     city = serializers.CharField(max_length=100)
 
