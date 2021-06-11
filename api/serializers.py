@@ -15,3 +15,9 @@ class StudentSerializer(serializers.Serializer):
         instance.city = validated_data.get('city',instance.city)
         instance.save()
         return instance
+
+    #Field Level Validation
+    def validate_roll(self, value):
+        if value >= 200:
+            raise serializers.ValidationError('SEAT FULL !!')
+        return value

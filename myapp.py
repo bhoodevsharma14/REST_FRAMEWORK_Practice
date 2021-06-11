@@ -18,7 +18,7 @@ def get_data(id = None):
 def post_data():
     data = {
         'name':'Prasanna Joshi',
-        'roll':109,
+        'roll':209,
         'city':'Indore'
     }
 
@@ -46,7 +46,7 @@ def delete_data(id=None):
     data = r.json()
     print(data)
 
-delete_data(9)
+# delete_data(9)
 # update_data(4)
-# post_data()
+post_data()
 # get_data()

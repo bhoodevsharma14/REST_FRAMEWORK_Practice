@@ -45,7 +45,7 @@ class StudentAPI(View):
             # return HttpResponse(json_data,content_type='application//json')
         # json_data = JSONRenderer().render(serializer.errors)
         # return HttpResponse(json_data,content_type='application/json')
-        return JsonResponse(serializer.errors,safe=False)
+        return JsonResponse(serializer.errors)
 
     def put(self,request,*args,**kwargs):
         json_data = request.body
