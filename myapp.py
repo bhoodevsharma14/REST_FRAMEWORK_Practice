@@ -17,9 +17,9 @@ def get_data(id = None):
 
 def post_data():
     data = {
-        'name':'Balram',
-        'roll':111,
-        'city':'Barujna'
+        'name':'Akansha',
+        'roll':112,
+        'city':'Dewas'
     }
 
     json_data = json.dumps(data)
@@ -29,8 +29,8 @@ def post_data():
 
 def update_data(id=None):
     data = {
-        'id':4,
-        'city':'Bagli'
+        'id':id,
+        'city':'Ujjain'
     }
     json_data = json.dumps(data)
     r = requests.put(url=URL,data=json_data)
@@ -46,7 +46,7 @@ def delete_data(id=None):
     data = r.json()
     print(data)
 
-# delete_data(9)
-# update_data(4)
-post_data()
-# get_data()
+# delete_data(12)
+# update_data()
+# post_data()
+get_data()
