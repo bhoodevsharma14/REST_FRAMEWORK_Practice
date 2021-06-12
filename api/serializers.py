@@ -6,6 +6,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student     #name of our model
         fields = ['name','roll','city']   #List of fields we want to see in the response
-        read_only_fields = ['name','roll']
+        # read_only_fields = ['name','roll']
+        extra_kwargs = {'name':{'read_only':True}}
         # fields = '__all__'
         

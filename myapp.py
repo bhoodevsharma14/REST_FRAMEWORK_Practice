@@ -32,7 +32,7 @@ def update_data(id=None):
         'id':id,
         'name':'Ballu',
         'roll':109,
-        'city':'Mandsaur'
+        'city':'Barujna'
     }
     json_data = json.dumps(data)
     r = requests.put(url=URL,data=json_data)
